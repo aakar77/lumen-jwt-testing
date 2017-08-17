@@ -19,7 +19,7 @@ $app->get('/', function () use ($app) {
     return $app->version();
 });
 
-$app->group(['middleware' => 'auth'], function() use ($app) {
+$app->group(['middleware' => 'jwt.auth'], function() use ($app) {
 
 	$app->get('/create', function () use($app) {
 		return "Hello";

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Factory as Auth;
+use Illuminate\Support\Facades\Log;
 
 class Authenticate
 {
@@ -35,6 +36,7 @@ class Authenticate
      */
     public function handle($request, Closure $next, $guard = null)
     {
+      Log::error("Error Captured in Auth Middleware".$request );
         if ($this->auth->guard($guard)->guest()) {
             return response('Unauthorized.', 401);
         }

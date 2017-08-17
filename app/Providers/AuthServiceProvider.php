@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Log;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -32,7 +33,13 @@ class AuthServiceProvider extends ServiceProvider
 
         $this->app['auth']->viaRequest('api', function ($request) {
 
-           return \App\User::where('email', $request->input('email'))->first();
+          $header = $request->header('Authorization');
+          Log::error("Header". $header);
+
+          Log::error("Error Captured in Auth Provider".$request);
+
+          return app('auth')->setRequest($request)->user();
+          // return \App\User::where('email', $request->input('email'))->first();
         });
     }
 }
