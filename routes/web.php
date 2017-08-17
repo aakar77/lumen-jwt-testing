@@ -14,3 +14,19 @@
 $app->get('/', function () use ($app) {
     return $app->version();
 });
+
+$app->get('/', function () use ($app) {
+    return $app->version();
+});
+
+$app->group(['middleware' => 'auth'], function() use ($app) {
+
+	$app->get('/create', function () use($app) {
+		return "Hello";
+	});
+
+});
+
+$app->post('/createUser','UserController@createUser');
+
+$app->post('/loginUser','AuthController@authenticate');
