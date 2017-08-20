@@ -63,8 +63,8 @@ $app->singleton(
 // ]);
 
 $app->routeMiddleware([
-     //'auth' => App\Http\Middleware\Authenticate::class,
-     //'jwt.auth' => \Tymon\JWTAuth\Middleware\GetUserFromToken::class,
+     'auth' => App\Http\Middleware\Authenticate::class,
+    // 'jwt-auth' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
 ]);
 
 /*
@@ -78,10 +78,13 @@ $app->routeMiddleware([
 |
 */
 
-$app->register(App\Providers\AppServiceProvider::class);
+//$app->register(App\Providers\AppServiceProvider::class);
+
+
 $app->register(App\Providers\AuthServiceProvider::class);
 
-$app->register(\Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+// Tymon JWT package
+
 // $app->register(App\Providers\EventServiceProvider::class);
 
 /*

@@ -1,10 +1,8 @@
 <?php
-
 namespace App\Http\Middleware;
-
 use Closure;
 use Illuminate\Contracts\Auth\Factory as Auth;
-use Illuminate\Support\Facades\Log;
+use Log;
 
 class Authenticate
 {
@@ -14,7 +12,6 @@ class Authenticate
      * @var \Illuminate\Contracts\Auth\Factory
      */
     protected $auth;
-
     /**
      * Create a new middleware instance.
      *
@@ -25,7 +22,6 @@ class Authenticate
     {
         $this->auth = $auth;
     }
-
     /**
      * Handle an incoming request.
      *
@@ -36,11 +32,12 @@ class Authenticate
      */
     public function handle($request, Closure $next, $guard = null)
     {
-      Log::error("Error Captured in Auth Middleware".$request );
+
+      //  Log::error('Error'. $this->auth->parseToken()->authenticate());
+
         if ($this->auth->guard($guard)->guest()) {
             return response('Unauthorized.', 401);
         }
-
         return $next($request);
     }
 }

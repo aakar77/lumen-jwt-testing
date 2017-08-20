@@ -33,13 +33,14 @@ class AuthServiceProvider extends ServiceProvider
 
         $this->app['auth']->viaRequest('api', function ($request) {
 
-          $header = $request->header('Authorization');
-          Log::error("Header". $header);
+          if($request->header('api_token')){
+            $api_token = $request->header('api_token');
+          }
 
-          Log::error("Error Captured in Auth Provider".$request);
+          if($api_token){
+              //return User::where('created_at', $request->input('a'))->first();
+          }
 
-          return app('auth')->setRequest($request)->user();
-          // return \App\User::where('email', $request->input('email'))->first();
         });
     }
 }

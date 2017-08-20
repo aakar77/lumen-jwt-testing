@@ -3,22 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Validator;
-use Tymon\JWTAuth\JWTAuth;
 use App\Helpers\Response;
+
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
+
+use Validator;
+use Illuminate\Support\Facades\Auth;
+
+use App\User;
+
 
 class AuthController extends Controller
 {
-  protected $jwt;
 
-  public function __construct(JWTAuth $jwt, Request $request)
+  public function __construct(Request $request, User $user)
   {
-   $this->jwt = $jwt;
    $this->request = $request;
+   $this->user = $user;
   }
-// Function for encrypting the password
+
+  // Function for encrypting the password
   public function hashPassword()
   {
    // Validate the new password length...
@@ -35,23 +40,52 @@ class AuthController extends Controller
          'password' => 'required',
      ];
      // Hashing the password the user has provided
-    //AuthController::hashPassword($this->request);
+     // AuthController::hashPassword($this->request);
      // Calling Validator for Validating the request
 
      $validatorResponse = Validator::make($this->request->all(), $rules);
      // Send failed response if validation fails
 
-     if($validatorResponse->errors()->count()) {
+     if($validatorResponse->errors()->count())
+     {
           return Response::badRequest($validatorResponse->errors());
      }
 
-     // Trying to check the token validation
-     try {
-         $email = $this->request->email;
-         $password = $this->request->password;
+     // Trying to check whether the user and password exists.
+     try
+     {
+         $email = $this->request['email'];
+         $password = $this->request['password'];
+
+         $user = User::where('email', $email)->first();
+
+        // Checking wheter user is existing or not, if yes
+        if (Hash::check($password,$user['password']))
+        {
+           return "success";
+        }
+        else
+        {
+          return "Wrong Credentials";
+        }
 
 
-         $token = $this->jwt->attempt(['email' => $email,'password'=>$password]);
+
+        // If the password email pair is valid, you are done
+
+          // iF there is a valid token than in that case return that token.
+
+          // If there is no valid token, generate the token using the secret key and save the token in the database
+
+
+
+
+
+
+        // IF the passowrd and email pair is invalid send the error user not found
+
+
+
 
          if(!$token)
          {
