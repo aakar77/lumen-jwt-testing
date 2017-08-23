@@ -6,10 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Helpers\Response;
 
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
+
 use Illuminate\Http\Request;
 
 use Validator;
-use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use DB;
 
 use App\User;
 
@@ -54,15 +58,38 @@ class AuthController extends Controller
      // Trying to check whether the user and password exists.
      try
      {
-         $email = $this->request['email'];
-         $password = $this->request['password'];
 
-         $user = User::where('email', $email)->first();
+        $email = $this->request['email'];
+        $password = $this->request['password'];
+
+        $user = User::where('email', $email)->first();
 
         // Checking wheter user is existing or not, if yes
         if (Hash::check($password,$user['password']))
         {
-           return "success";
+          // Generating a random string here and sending that string to the user on success.
+
+          $tokenKey = Config::get('key');
+          $userToken = HASH::make(str_random(150)+$email, array('rounds'=>12));
+
+          $current_time = Carbon::now()->toDateTimeString();
+
+          // Storing the token into the database
+          $result =  DB::table('users')
+                     ->where('email',$email)
+                     ->update(['user_token' => $userToken, 'token_created' => $current_time]);
+
+          // Returning the Token to the USER
+          if($result)
+          {
+            return $userToken;
+          }
+          else
+          {
+            // Attach a corresponding helper function
+            return "Failure";
+          }
+
         }
         else
         {
@@ -76,10 +103,6 @@ class AuthController extends Controller
           // iF there is a valid token than in that case return that token.
 
           // If there is no valid token, generate the token using the secret key and save the token in the database
-
-
-
-
 
 
         // IF the passowrd and email pair is invalid send the error user not found
