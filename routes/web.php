@@ -16,10 +16,11 @@ $app->get('/', function () use ($app) {
     return $app->version();
 });
 
-$app->group(['middleware' => 'auth'], function() use ($app) {
+$app->group(['middleware' => 'authc'], function() use ($app) {
 
 	$app->get('/create', function () use($app) {
 
+    // Getting the authenticated user
     $user = Auth::user();
 
     return "Hello" . $user;
@@ -31,3 +32,21 @@ $app->post('/createUser','UserController@createUser');
 
 
 $app->post('/loginUser','AuthController@authenticate');
+
+
+
+$app->group(['middleware' => 'authb'], function() use ($app) {
+
+	$app->get('/createC', function () use($app) {
+
+    // Getting the authenticated client
+    $client = Auth::user();
+
+    return "Hello" . $client;
+	});
+
+});
+
+$app->post('/createClient','ClientController@createClient');
+
+$app->post('/loginClient','AuthControllerC@authenticate');

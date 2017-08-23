@@ -63,7 +63,8 @@ $app->singleton(
 // ]);
 
 $app->routeMiddleware([
-     'auth' => App\Http\Middleware\Authenticate::class,
+     'authc' => App\Http\Middleware\Authenticate::class,
+     'authb' => App\Http\Middleware\Authenticateb::class,
     // 'jwt-auth' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
 ]);
 
@@ -82,6 +83,7 @@ $app->routeMiddleware([
 
 
 $app->register(App\Providers\AuthServiceProvider::class);
+$app->register(App\Providers\AuthServiceProviderb::class);
 
 // Tymon JWT package
 

@@ -15,23 +15,23 @@ use Validator;
 use Carbon\Carbon;
 use DB;
 
-use App\User;
+use App\Client;
 
 
-class AuthController extends Controller
+class AuthControllerC extends Controller
 {
 
-  public function __construct(Request $request, User $user)
+  public function __construct(Request $request, Client $client)
   {
    $this->request = $request;
-   $this->user = $user;
+   $this->client = $client;
   }
 
   // Function for encrypting the password
   public function hashPassword()
   {
    // Validate the new password length...
-    $this->request['password'] = Hash::make($this->request->password);
+    $this->request['c_password'] = Hash::make($this->request->c_password);
   }
     /*
   postLogin function in the Controller
@@ -40,8 +40,8 @@ class AuthController extends Controller
   public function authenticate()
   {
      $rules = [
-         'email' => 'required|email',
-         'password' => 'required',
+         'c_email' => 'required|email',
+         'c_password' => 'required',
      ];
      // Hashing the password the user has provided
      // AuthController::hashPassword($this->request);
@@ -58,30 +58,30 @@ class AuthController extends Controller
      // Trying to check whether the user and password exists.
 
 
-        $email = $this->request['email'];
-        $password = $this->request['password'];
+        $c_email = $this->request['c_email'];
+        $c_password = $this->request['c_password'];
 
-        $user = User::where('email', $email)->first();
+        $client = Client::where('c_email', $c_email)->first();
 
         // Checking wheter user is existing or not, if yes
-        if (Hash::check($password,$user['password']))
+        if (Hash::check($c_password,$client['c_password']))
         {
           // Generating a random string here and sending that string to the user on success.
 
           $tokenKey = Config::get('key');
-          $userToken = HASH::make(str_random(150)+$email, array('rounds'=>12));
+          $clientToken = HASH::make(str_random(150)+$c_email, array('rounds'=>12));
 
           $current_time = Carbon::now()->toDateTimeString();
 
           // Storing the token into the database
-          $result =  DB::table('users')
-                     ->where('email',$email)
-                     ->update(['user_token' => $userToken, 'token_created' => $current_time]);
+          $result =  DB::table('clients')
+                     ->where('c_email',$c_email)
+                     ->update(['c_token' => $clientToken, 'c_created' => $current_time]);
 
           // Returning the Token to the USER
           if($result)
           {
-            return $userToken;
+            return $clientToken;
           }
           else
           {
@@ -93,7 +93,7 @@ class AuthController extends Controller
         else
         {
           // Send Error User not found, Bad Credentials
-          return response()->json(['user_not_found'], 404);
+          return response()->json(['client_not_found'], 404);
         }
 
     }
