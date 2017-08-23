@@ -19,7 +19,10 @@ $app->get('/', function () use ($app) {
 $app->group(['middleware' => 'auth'], function() use ($app) {
 
 	$app->get('/create', function () use($app) {
-    return "Hello";
+
+    $user = Auth::user();
+
+    return "Hello" . $user;
 	});
 
 });

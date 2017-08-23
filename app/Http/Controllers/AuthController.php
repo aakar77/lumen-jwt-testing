@@ -56,8 +56,7 @@ class AuthController extends Controller
      }
 
      // Trying to check whether the user and password exists.
-     try
-     {
+
 
         $email = $this->request['email'];
         $password = $this->request['password'];
@@ -86,49 +85,20 @@ class AuthController extends Controller
           }
           else
           {
-            // Attach a corresponding helper function
-            return "Failure";
+            // Attach a corresponding Response from Response class
+            return response()->json(['Internal_error'], 500);
           }
 
         }
         else
         {
-          return "Wrong Credentials";
+          // Send Error User not found, Bad Credentials
+          return response()->json(['user_not_found'], 404);
         }
 
+    }
 
 
-        // If the password email pair is valid, you are done
-
-          // iF there is a valid token than in that case return that token.
-
-          // If there is no valid token, generate the token using the secret key and save the token in the database
-
-
-        // IF the passowrd and email pair is invalid send the error user not found
-
-
-
-
-         if(!$token)
-         {
-             return response()->json(['user_not_found'], 404);
-         }
-
-     } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e){
-         return response()->json(['token_invalid'], 500);
-
-     } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e){
-         return response()->json(['token_invalid'], 500);
-
-     } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
-
-         return response()->json(['token_absent' => $e->getMessage()], 500);
-     }
-     // No exception occured uptill now and so token generated, return the token back.
-     /* No need to store the generated token. It will be managed internally by Laravel  */
-     return response()->json(compact('token'));
-  }
 
 /* Get the authenticated user */
 

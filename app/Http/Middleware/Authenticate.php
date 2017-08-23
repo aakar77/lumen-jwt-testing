@@ -36,8 +36,9 @@ class Authenticate
       //  Log::error('Error'. $this->auth->parseToken()->authenticate());
 
         if ($this->auth->guard($guard)->guest()) {
-            return response('Unauthorized.', 401);
+            return response('Sorry User is NOT Authorized', 401);
         }
+
         return $next($request);
     }
 }
